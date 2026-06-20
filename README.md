@@ -1,70 +1,113 @@
 # WoW Blizzard Cleaner
 
-WoW Blizzard Cleaner is a Windows Forms utility for reviewing and safely cleaning local World of Warcraft, Blizzard, and Battle.net traces from a Windows PC.
+WoW Blizzard Cleaner is a Windows Forms desktop utility for reviewing and safely cleaning local World of Warcraft, Blizzard, Battle.net, cache, log, and configuration leftovers from a Windows PC.
 
-The app is designed around a review-first workflow: scanning never deletes anything. Items are listed in a grid, the user chooses what to clean, backups are created, and deletion requires confirmation.
+The project is aimed at users who want a clear, guided way to remove old local traces after uninstalling, testing, or cleaning up WoW-related software and third-party tools. It is built for people who do not want to manually search through registry paths, AppData folders, ProgramData folders, logs, caches, and leftover configuration files.
 
-## Features
+The application follows a review-first workflow: scanning does not delete anything. Detected items are shown in a table, the user chooses what to clean, backups are created, and deletion requires confirmation.
 
-- Dark Windows Forms loader-style interface.
-- Scan-only workflow before any cleanup.
-- Per-item checkbox selection in the Results tab.
-- `DELETE SELECTED` for checked rows only.
-- `DELETE ALL` selects available rows and still requires confirmation.
-- `PRE-CLEAN` workflow that scans, selects allowed targets, and asks for confirmation.
-- Optional `AUTO-CLEAN ON EXIT` that watches for real WoW game processes to close, waits 30 seconds, cancels if WoW starts again, and then starts the same safe pre-clean workflow.
-- Registry scanning for WoW, Blizzard, and Battle.net allowlisted locations.
-- Optional deep registry scan with safety filters.
-- File scanning for WoW, Blizzard, and Battle.net allowlisted folders.
-- Process and service detection for WoW, Blizzard, and Battle.net names.
-- Smart deletion with batching, retry logging, and access-denied handling.
-- `.reg` registry backup before registry deletion.
-- `.zip` backup before file/folder deletion.
-- Restore from `.reg` and `.zip` backups.
-- Live log view.
-- Progress percentage and ETA shown in the progress panel and footer.
-- Tray icon with Show, Auto-Clean ON/OFF, and Exit.
-- Single-instance protection so only one copy can run at a time.
+## What It Does
+
+- Finds local WoW, Blizzard, and Battle.net registry entries from allowlisted locations.
+- Finds local WoW, Blizzard, and Battle.net files/folders from allowlisted paths.
+- Lists detected registry keys, files, folders, processes, and services before cleanup.
+- Lets the user select or unselect each item before deletion.
+- Creates registry and file backups before deleting anything.
+- Provides restore support for `.reg` and `.zip` backups.
+- Logs actions to a desktop text log.
+- Shows live progress, percentage, and ETA during long operations.
+- Includes tray support and single-instance protection.
+
+## Main Features
+
+- Dark loader-style Windows Forms interface.
+- `SCAN` lists detected traces without deleting anything.
+- `DELETE SELECTED` removes only checked rows after confirmation.
+- `DELETE ALL` checks all available rows and still asks for confirmation.
+- `PRE-CLEAN` runs scan, selects allowed targets, and asks for the same backup/deletion confirmation.
+- `AUTO-CLEAN ON EXIT` watches for real WoW game processes to close, waits 30 seconds, cancels if WoW starts again, and then starts the same safe pre-clean workflow.
+- Smart deletion with batching and retry logging for temporarily locked files/keys.
+- Backup and restore support.
+- Manual allowlisted target entry.
 - Informational Ban Wave Check using supported public sources:
   - Reddit: `r/wow`, `r/classicwow`, `r/woweconomy`, `r/wowclassic`, `r/worldofwarcraft`
   - Blizzard Official WoW Forums
 
 ## Safety Model
 
-The project is intentionally conservative.
+This project is intentionally conservative and user-confirmed.
 
 - Scan does not delete anything.
 - Cleanup requires explicit user confirmation.
 - Backup is created before deletion.
 - Only checked rows are cleaned.
-- Windows, System32, Microsoft, Driver, Service, Kernel, Riot, and Vanguard paths are protected.
 - Access-denied errors are logged and skipped.
-- The app is not an anti-ban, bypass, spoofing, evasion, or anti-detection tool.
-- Ban Wave Check is informational only and does not modify the game, Blizzard services, hardware identifiers, or network identity.
+- Windows, System32, Microsoft, Driver, Service, Kernel, Riot, and Vanguard paths are protected.
+- The app is not designed to modify Blizzard services, hardware identifiers, machine identity, network identity, Windows security logs, or anti-cheat components.
+- Ban Wave Check is informational only and does not modify the game or the system.
 
-## Requirements
+## Responsible Use
+
+This utility is for local maintenance, uninstall cleanup, troubleshooting, and user-controlled removal of old WoW/Blizzard/Battle.net leftovers.
+
+It is not an anti-ban guarantee, anti-cheat bypass, spoofing tool, account evasion tool, or botting support tool. Users are responsible for following the rules of any software, game, or service they use.
+
+## Installation And Build Requirements
+
+To build the application from source, install:
 
 - Windows 10 or Windows 11.
-- Visual Studio 2022 or newer.
-- .NET 8 Windows Desktop workload.
+- Visual Studio 2022 Community, Professional, or Enterprise.
+- The `.NET desktop development` workload from Visual Studio Installer.
+- .NET 8 SDK. Visual Studio 2022 usually installs this with the workload, but it can also be installed from Microsoft.
 
-## Build
+To run a self-contained published release, users do not need to install .NET. The portable release includes the runtime inside the published app.
 
-Open `WoWCleanerClassic.sln` in Visual Studio 2022 and build the solution.
+## Build From Source With Visual Studio
 
-Or build from a terminal:
+1. Download or clone this repository.
+2. Open `WoWCleanerClassic.sln` in Visual Studio 2022.
+3. Wait for Visual Studio to restore the project.
+4. Select `Debug` or `Release` configuration.
+5. Click `Build` -> `Build Solution`.
+6. Run the app with `Start Debugging` or open the generated executable from:
 
-```powershell
-dotnet build WoWCleanerClassic.sln
+```text
+bin\Debug\net8.0-windows\WoWCleaner.exe
 ```
 
+or:
+
+```text
+bin\Release\net8.0-windows\WoWCleaner.exe
+```
+
+## Build From Source With The .NET SDK
+
+Install the .NET 8 SDK, then run:
+
+```powershell
+dotnet restore WoWCleanerClassic.sln
+dotnet build WoWCleanerClassic.sln --configuration Release
+```
+
+The project must be built on Windows because it uses Windows Forms and Windows-specific APIs.
+
 ## Publish A Portable Build
+
+Use this command to create a portable Windows x64 build:
 
 ```powershell
 dotnet publish WoWCleaner.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o ReleasePackage
 ```
 
-The published folder contains the portable executable and `AppIcon.ico`.
+The published folder contains:
+
+- `WoWCleaner.exe`
+- `AppIcon.ico`
+- optional debug symbols if generated
+
+The resulting `WoWCleaner.exe` can be shared as a portable app. No installer is required.
 
 ## Project Structure
 

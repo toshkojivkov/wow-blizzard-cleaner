@@ -51,3 +51,15 @@ Fixed:
 - Footer status now follows the current operation instead of staying static.
 - Cancelled scans no longer force the progress bar to 100%.
 - Restore operations now also show simulated progress and ETA.
+
+2026-06-21
+
+Changed:
+- README now includes public installation, build, Visual Studio, .NET SDK, and portable publish instructions.
+
+2026-06-21
+
+Changed:
+- README was fully rewritten for public repository presentation.
+- README now describes the project as a local WoW/Blizzard/Battle.net and third-party tool cleanup utility.
+- README now includes a Responsible Use section that avoids presenting the project as an anti-ban, bypass, spoofing, account evasion, or botting support tool.
